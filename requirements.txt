@@ -147,7 +147,7 @@ multidict==6.0.5
 mypy-extensions==1.0.0
 namex==0.0.8
 nltk==3.9.1
-numpy==1.26.0
+numpy==1.26.4
 oauthlib==3.2.2
 openai==1.77.0
 opencv-python-headless==4.11.0.86
