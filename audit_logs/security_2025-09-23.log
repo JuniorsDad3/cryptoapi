@@ -1,0 +1,11 @@
+{"timestamp": "2025-09-23T09:41:52.427521", "event_type": "USER_REGISTERED", "user_id": "0f78511d-1be9-4b51-9903-7997d54b2f4e", "severity": "INFO", "details": {"company": "POPS SODA"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T10:03:58.176885", "severity": "INFO", "event_type": "LOGIN_FAILED", "user_id": "anonymous", "details": {"email": "gerald.mandebvu@gmail.com"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T10:28:44.680089", "severity": "INFO", "event_type": "USER_REGISTERED", "user_id": "d6932a98-3970-4f9c-901a-7a36a8a2d417", "details": {"company": "POPS SODA"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T10:28:56.435754", "severity": "INFO", "event_type": "LOGIN_SUCCESS", "user_id": "d6932a98-3970-4f9c-901a-7a36a8a2d417", "details": {}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:16:03.941543", "severity": "INFO", "event_type": "LOGOUT", "user_id": "d6932a98-3970-4f9c-901a-7a36a8a2d417", "details": {}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:24:51.121214", "severity": "INFO", "event_type": "LOGIN_FAILED", "user_id": "anonymous", "details": {"email": "gerald.mandebvu@gmail.com"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:25:01.623741", "severity": "INFO", "event_type": "LOGIN_FAILED", "user_id": "anonymous", "details": {"email": "gerald.mandebvu@gmail.com"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:25:25.043956", "severity": "INFO", "event_type": "USER_REGISTERED", "user_id": "169955c2-6095-4571-903c-c69e75731ed7", "details": {"company": "POPS SODA"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:26:05.814854", "severity": "INFO", "event_type": "LOGIN_SUCCESS", "user_id": "169955c2-6095-4571-903c-c69e75731ed7", "details": {}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:53:37.680433", "severity": "INFO", "event_type": "LOGOUT", "user_id": "169955c2-6095-4571-903c-c69e75731ed7", "details": {}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-23T11:54:14.072458", "severity": "INFO", "event_type": "LOGIN_FAILED", "user_id": "anonymous", "details": {"email": "itradeafrika@gmail.com"}, "ip_address": "127.0.0.1"}

@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Billing & Usage | {{ config.COMPANY_NAME }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+    <h1 class="h2">Billing & Usage</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button class="btn btn-sm btn-outline-primary">Upgrade Plan</button>
+            <button class="btn btn-sm btn-outline-secondary">Payment Methods</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Current Plan -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Current Plan</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <span class="badge bg-primary fs-6 px-3 py-2">{{ billing.current_tier|title }}</span>
+                </div>
+                <h3 class="text-primary">{{ billing.cost_breakdown.total|format_currency }}</h3>
+                <p class="text-muted">per month</p>
+                <div class="text-start small">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Base Price:</span>
+                        <span>{{ billing.cost_breakdown.base_price|format_currency }}</span>
+                    </div>
+                    {% if billing.cost_breakdown.storage_overage > 0 %}
+                    <div class="d-flex justify-content-between mb-2 text-warning">
+                        <span>Storage Overage:</span>
+                        <span>+{{ billing.cost_breakdown.storage_overage|format_currency }}</span>
+                    </div>
+                    {% endif %}
+                    {% if billing.cost_breakdown.api_overage > 0 %}
+                    <div class="d-flex justify-content-between mb-2 text-warning">
+                        <span>API Overage:</span>
+                        <span>+{{ billing.cost_breakdown.api_overage|format_currency }}</span>
+                    </div>
+                    {% endif %}
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total:</span>
+                        <span>{{ billing.cost_breakdown.total|format_currency }}</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <small class="text-muted">Next billing date: {{ billing.next_billing_date }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Usage Statistics -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Usage Statistics</h5>
+            </div>
+            <div class="card-body">
+                <!-- Storage Usage -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold">Storage Usage</span>
+                        <span>{{ usage.storage_used_gb }} GB of {{ usage.storage_limit_gb }} GB</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-{{ 'warning' if usage.storage_percentage > 80 else 'success' }}" 
+                             role="progressbar" style="width: {{ usage.storage_percentage }}%">
+                        </div>
+                    </div>
+                    <div class="text-end small text-muted mt-1">
+                        {{ usage.storage_percentage }}% used
+                    </div>
+                </div>
+                
+                <!-- API Usage -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold">API Calls</span>
+                        <span>{{ usage.api_calls_used|number_format }} of {{ usage.api_calls_limit|number_format }}</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-{{ 'warning' if usage.api_percentage > 80 else 'info' }}" 
+                             role="progressbar" style="width: {{ usage.api_percentage }}%">
+                        </div>
+                    </div>
+                    <div class="text-end small text-muted mt-1">
+                        {{ usage.api_percentage }}% used
+                    </div>
+                </div>
+                
+                <!-- Usage Alerts -->
+                {% if usage.storage_percentage > 80 or usage.api_percentage > 80 %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    {% if usage.storage_percentage > 80 %}
+                    <strong>Storage nearing limit:</strong> Consider upgrading your plan or archiving old files.
+                    {% endif %}
+                    {% if usage.api_percentage > 80 %}
+                    <strong>API calls nearing limit:</strong> Upgrade to avoid service interruptions.
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pricing Tiers -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Available Plans</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for tier_id, tier in pricing_tiers.items() %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 {% if tier_id == billing.current_tier %}border-primary{% endif %}">
+                            {% if tier_id == billing.current_tier %}
+                            <div class="card-header bg-primary text-white text-center py-2">
+                                <small>CURRENT PLAN</small>
+                            </div>
+                            {% endif %}
+                            <div class="card-body text-center">
+                                <h5>{{ tier.name }}</h5>
+                                <h3 class="text-primary my-3">${{ tier.monthly_price }}/mo</h3>
+                                <ul class="list-unstyled text-start small">
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        {{ tier.storage_gb }}GB Storage
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        {{ tier.users }} Users
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        {{ tier.api_calls }} API Calls
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>
+                                        {{ tier.support }} Support
+                                    </li>
+                                </ul>
+                                {% if tier_id == billing.current_tier %}
+                                <button class="btn btn-outline-primary w-100" disabled>Current Plan</button>
+                                {% else %}
+                                <button class="btn btn-primary w-100">Upgrade to {{ tier.name }}</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Invoice History -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Invoice History</h5>
+            </div>
+            <div class="card-body">
+                {% if invoices %}
+                <div class="table-responsive">
+                    <table class="table table-hover data-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in invoices %}
+                            <tr>
+                                <td>{{ invoice.number }}</td>
+                                <td>{{ invoice.date }}</td>
+                                <td>{{ invoice.amount|format_currency }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if invoice.paid else 'warning' }}">
+                                        {{ 'Paid' if invoice.paid else 'Pending' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Download</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-receipt display-1 text-muted"></i>
+                    <p class="text-muted mt-3">No invoices yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

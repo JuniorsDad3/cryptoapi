@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Secure Cloud Storage for Business | {{ config.COMPANY_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Enterprise-Grade Secure Cloud Storage</h1>
+                <p class="lead mb-4">Bank-level security meets business simplicity. Store, share, and protect your files with military-grade encryption and enterprise features.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Start Free Trial
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>Watch Demo
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-shield-lock" style="font-size: 15rem; opacity: 0.8;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="h1 mb-3">Why Choose {{ config.COMPANY_NAME }}?</h2>
+            <p class="lead text-muted">Built for businesses that take security seriously</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-shield-check text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="my-3">Military-Grade Encryption</h4>
+                        <p class="text-muted">AES-256 encryption for files at rest and in transit. Your data is secure from prying eyes.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-graph-up text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="my-3">Enterprise Analytics</h4>
+                        <p class="text-muted">Comprehensive usage reports, audit trails, and compliance monitoring for your business.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-currency-dollar text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="my-3">Predictable Pricing</h4>
+                        <p class="text-muted">No hidden costs. Simple tiered pricing that scales with your business needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="h1 mb-3">Simple, Transparent Pricing</h2>
+            <p class="lead text-muted">Choose the plan that fits your business needs</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for tier_id, tier in pricing_tiers.items() %}
+            <div class="col-md-4">
+                <div class="card h-100 {% if tier_id == 'professional' %}border-primary{% endif %}">
+                    {% if tier_id == 'professional' %}
+                    <div class="card-header bg-primary text-white text-center">
+                        <span class="badge bg-warning">MOST POPULAR</span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body text-center p-4">
+                        <h3 class="h2">{{ tier.name }}</h3>
+                        <div class="my-4">
+                            <span class="h1 text-primary">${{ tier.monthly_price }}</span>
+                            <span class="text-muted">/month</span>
+                        </div>
+                        
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                {{ tier.storage_gb }}GB Storage
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Up to {{ tier.users }} Users
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                {{ tier.api_calls }} API Calls
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                {{ tier.support }} Support
+                            </li>
+                            {% for feature in tier.features %}
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                {{ feature }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <a href="{{ url_for('register') }}?tier={{ tier_id }}" class="btn {% if tier_id == 'professional' %}btn-primary{% else %}btn-outline-primary{% endif %} w-100">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <p class="text-muted">All plans include 14-day free trial. No credit card required.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Security Features -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="h1 mb-4">Enterprise Security Features</h2>
+                <div class="d-flex mb-3">
+                    <i class="bi bi-shield-check text-primary me-3" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <h5>AES-256 Encryption</h5>
+                        <p class="text-muted">Military-grade encryption for all your files, both at rest and in transit.</p>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <i class="bi bi-clock-history text-primary me-3" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <h5>Compliance Ready</h5>
+                        <p class="text-muted">Built-in audit trails and reporting for GDPR, HIPAA, and SOC 2 compliance.</p>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <i class="bi bi-graph-up text-primary me-3" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <h5>Real-time Monitoring</h5>
+                        <p class="text-muted">24/7 security monitoring and instant alerts for suspicious activities.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-lock-fill text-primary" style="font-size: 20rem; opacity: 0.1;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="h1 mb-4">Ready to Secure Your Business Data?</h2>
+        <p class="lead mb-4">Join thousands of businesses that trust us with their critical data.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                <i class="bi bi-rocket-takeoff me-2"></i>Start Free Trial
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Existing Customer
+            </a>
+        </div>
+        <p class="mt-3 small">No credit card required • 14-day free trial • Setup in minutes</p>
+    </div>
+</section>
+{% endblock %}

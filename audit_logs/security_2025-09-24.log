@@ -1,0 +1,4 @@
+{"timestamp": "2025-09-24T21:12:02.633839", "severity": "INFO", "event_type": "USER_REGISTERED", "user_id": "86f3472e-9a2c-43f9-916d-6d4577e80232", "details": {"company": "POPS SODA"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-24T21:12:09.506721", "severity": "INFO", "event_type": "LOGIN_FAILED", "user_id": "anonymous", "details": {"email": "itradeafrika@gmail.com"}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-24T21:12:17.750601", "severity": "INFO", "event_type": "LOGIN_SUCCESS", "user_id": "86f3472e-9a2c-43f9-916d-6d4577e80232", "details": {}, "ip_address": "127.0.0.1"}
+{"timestamp": "2025-09-24T21:28:49.105510", "severity": "INFO", "event_type": "LOGOUT", "user_id": "86f3472e-9a2c-43f9-916d-6d4577e80232", "details": {}, "ip_address": "127.0.0.1"}

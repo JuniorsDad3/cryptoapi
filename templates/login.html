@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Login | {{ config.COMPANY_NAME }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="mb-0">Enterprise Login</h3>
+                <p class="text-muted mb-0">Access your secure cloud storage</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address *</label>
+                        <input type="email" class="form-control" id="email" name="email" required 
+                               placeholder="your@company.com">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password *</label>
+                        <input type="password" class="form-control" id="password" name="password" required 
+                               placeholder="Enter your password">
+                        <div class="form-text">
+                            <a href="#" class="text-decoration-none">Forgot your password?</a>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">Remember me for 30 days</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In to Dashboard
+                    </button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="mb-0">Don't have an account? 
+                        <a href="{{ url_for('register') }}" class="text-decoration-none">Start your free trial</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Notice -->
+        <div class="alert alert-info mt-4">
+            <div class="d-flex">
+                <i class="bi bi-info-circle me-3" style="font-size: 1.5rem;"></i>
+                <div>
+                    <h6 class="alert-heading mb-1">Secure Login</h6>
+                    <p class="mb-0 small">Your login is protected with enterprise-grade security. All sessions are encrypted and monitored.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

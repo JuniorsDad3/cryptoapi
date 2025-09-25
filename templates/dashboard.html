@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | {{ config.COMPANY_NAME }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+            <i class="bi bi-cloud-upload me-2"></i>Upload File
+        </button>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-primary border-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">Storage Used</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">
+                            {{ usage.storage_used_gb }} GB
+                        </div>
+                        <div class="small text-muted">of {{ usage.storage_limit_gb }} GB</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-hdd-stack fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-primary" role="progressbar" 
+                         style="width: {{ usage.storage_percentage }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-success border-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">API Calls</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ usage.api_calls_used|number_format }}</div>
+                        <div class="small text-muted">of {{ usage.api_calls_limit|number_format }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-cpu fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar bg-success" role="progressbar" 
+                         style="width: {{ usage.api_percentage }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-info border-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">Total Files</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ files|length }}</div>
+                        <div class="small text-muted">Securely stored</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-files fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start border-warning border-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-warning text-uppercase mb-1">Current Plan</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ tier|title }}</div>
+                        <div class="small text-muted">
+                            <a href="{{ url_for('billing') }}" class="text-decoration-none">Upgrade</a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-star fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Files -->
+    <div class="col-lg-8">
+        <div class="card" id="files">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Files</h5>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="bi bi-cloud-upload me-1"></i>Upload
+                    </button>
+                    <a href="{{ url_for('search_files') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-search me-1"></i>Search
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if files %}
+                <div class="table-responsive">
+                    <table class="table table-hover data-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Uploaded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in files %}
+                            <tr>
+                                <td>
+                                    <i class="bi bi-file-earmark file-icon me-2"></i>
+                                    {{ file.filename }}
+                                    {% if file.encrypted %}
+                                    <i class="bi bi-lock-fill text-success ms-1" title="Encrypted"></i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary file-type-badge">
+                                        {{ file.filename.split('.')[-1]|upper }}
+                                    </span>
+                                </td>
+                                <td>{{ file.size|format_size }}</td>
+                                <td>{{ file.uploaded_at|format_date }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('download_file', file_id=file.id) }}" 
+                                           class="btn btn-outline-success" title="Download">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                        <a href="{{ url_for('delete_file', file_id=file.id) }}" 
+                                           class="btn btn-outline-danger" 
+                                           onclick="return confirm('Are you sure you want to delete {{ file.filename }}?')"
+                                           title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-cloud-upload display-1 text-muted"></i>
+                    <h4 class="text-muted mt-3">No files yet</h4>
+                    <p class="text-muted">Upload your first file to get started with secure cloud storage.</p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="bi bi-cloud-upload me-2"></i>Upload Your First File
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Security & Activity -->
+    <div class="col-lg-4">
+        <!-- Security Events -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">Recent Security Events</h6>
+            </div>
+            <div class="card-body">
+                {% if security_events %}
+                    {% for event in security_events %}
+                    <div class="security-event event-{{ event.type }}">
+                        <div class="small fw-bold">{{ event.description }}</div>
+                        <div class="text-muted small">{{ event.timestamp|format_date }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-muted py-3">
+                        <i class="bi bi-shield-check display-6"></i>
+                        <p class="mt-2 mb-0">No recent security events</p>
+                    </div>
+                {% endif %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('security') }}" class="btn btn-sm btn-outline-primary">View All Events</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('billing') }}" class="btn btn-outline-primary text-start">
+                        <i class="bi bi-credit-card me-2"></i>Billing & Usage
+                    </a>
+                    <a href="{{ url_for('security') }}" class="btn btn-outline-success text-start">
+                        <i class="bi bi-shield-check me-2"></i>Security Settings
+                    </a>
+                    <button class="btn btn-outline-info text-start" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="bi bi-cloud-upload me-2"></i>Upload Files
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data" id="uploadForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select File</label>
+                        <input type="file" class="form-control" id="file" name="file" required>
+                        <div class="form-text">
+                            Maximum file size: 100MB. Supported formats: 
+                            {{ config.ALLOWED_EXTENSIONS|join(', ')|upper }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="file_type" class="form-label">File Type</label>
+                        <select class="form-select" id="file_type" name="file_type">
+                            <option value="general">General Document</option>
+                            <option value="contract">Contract</option>
+                            <option value="financial">Financial Document</option>
+                            <option value="media">Media File</option>
+                            <option value="archive">Archive</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Files are encrypted with AES-256 before storage.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-cloud-upload me-2"></i>Upload Securely
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Upload form handling
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('file');
+    const file = fileInput.files[0];
+    
+    if (file && file.size > {{ config.MAX_CONTENT_LENGTH }}) {
+        e.preventDefault();
+        alert('File size exceeds the 100MB limit. Please choose a smaller file.');
+        return false;
+    }
+});
+</script>
+{% endblock %}
